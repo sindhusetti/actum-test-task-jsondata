@@ -2,14 +2,13 @@ import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { UserService } from "./user.service";
-import { DomSanitizer } from "@angular/platform-browser";
 import { UserData } from "./user-data";
 @Component({
   selector: "my-app",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   userData: any;
   dataSource: any;
   constructor(public userservice: UserService) {}
@@ -18,6 +17,7 @@ export class AppComponent {
     this.userservice.getdata().subscribe((data: any) => {
       this.userData = data;
       this.dataSource = new MatTableDataSource<UserData>(this.userData);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -28,4 +28,7 @@ export class AppComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  /*paginator*/
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  ngAfterViewInit() {}
 }
